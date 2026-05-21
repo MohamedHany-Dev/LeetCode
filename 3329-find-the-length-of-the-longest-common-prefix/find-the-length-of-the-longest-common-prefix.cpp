@@ -14,7 +14,7 @@ public:
             int x = num;
             while(x > 0) {
                 if(vis.find(x) != vis.end()) {
-                    longest = max(longest, int(to_string(x).size()));
+                    longest = max(longest, int(log10(x) + 1));
                 }
                 x /= 10;
             }
