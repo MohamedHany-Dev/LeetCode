@@ -23,7 +23,7 @@ public:
             q.pop();
 
             for (auto child : adj[node]) {
-                if(in[child] > 0) --in[child];
+                --in[child];
                 if (!vis[child]) {
                     vis[child] = true;
                     q.push(child);
