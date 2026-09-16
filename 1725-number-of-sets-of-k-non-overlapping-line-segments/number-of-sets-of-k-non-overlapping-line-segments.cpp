@@ -1,40 +1,40 @@
 class Solution {
-    int mod = 1e9 + 7;
-
-    // Helper to calculate (base^exp) % mod
-    long long power(long long base, long long exp) {
-        long long res = 1;
-        base %= mod;
-        while (exp > 0) {
-            if (exp % 2 == 1) res = (res * base) % mod;
-            base = (base * base) % mod;
-            exp /= 2;
-        }
-        return res;
-    }
-
-    // Modular Inverse (Fermat's Little Theorem)
-    long long modInverse(long long n) {
-        return power(n, mod - 2);
-    }
-
 public:
+    static constexpr int MOD = 1e9 + 7;
+
     int numberOfSets(int n, int k) {
-        if (2 * k > n + k - 1) return 0;
 
-        int total_points = n + k - 1;
-        int points_to_pick = 2 * k;
+        vector<vector<int>> dp(
+            n,
+            vector<int>(k + 1, 0)
+        );
 
-        long long num = 1, den = 1;
-        
-        // Calculate (total_points)C(points_to_pick)
-        for (int i = 0; i < points_to_pick; i++) {
-            num = (num * (total_points - i)) % mod;
-            den = (den * (i + 1)) % mod;
+        // Selecting 0 segments: 1 way
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = 1;
         }
 
-        return (num * modInverse(den)) % mod;
+        for (int j = 1; j <= k; j++) {
+
+            long long prefixSum = 0;
+
+            for (int i = 1; i < n; i++) {
+
+                // Add ways to start a new segment
+                prefixSum = (
+                    prefixSum + dp[i - 1][j - 1]
+                ) % MOD;
+
+                // Skip current point OR
+                // add a segment ending at current point
+                dp[i][j] = (
+                    dp[i - 1][j] + prefixSum
+                ) % MOD;
+            }
+        }
+
+        return dp[n - 1][k];
     }
 };
 
-// math i didn't solve it
+// it like coins 2 problem , i can got it also
